@@ -10,7 +10,7 @@ http://www.mulesoft.org/schema/mule/wsc http://www.mulesoft.org/schema/mule/wsc/
 	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="61a7e37c-825b-4f3f-af9b-9a046fcedeca" >
 		<http:listener-connection host="0.0.0.0" port="8081" />
 	</http:listener-config>
-	<db:config name="Database_Config" doc:name="Database Config" doc:id="28c75059-54c5-4648-afb5-077e37450309" >
+	<db:config name="Database_Configuration" doc:name="Database Config" doc:id="28c75059-54c5-4648-afb5-077e37450309" >
 		<db:my-sql-connection host="localhost" port="3306" user="root" password="Tiger@1234" />
 	</db:config>
 	<flow name="scatter-gather-demoFlow" doc:id="b644e7ef-1888-4af9-8f48-db07c6acaeda" >
