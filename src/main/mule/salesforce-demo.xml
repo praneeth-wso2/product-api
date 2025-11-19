@@ -9,7 +9,7 @@ http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/
 	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="256f6cb8-a373-4983-b946-aca9146a1fdb" >
 		<http:listener-connection host="0.0.0.0" port="8081" />
 	</http:listener-config>
-	<salesforce:sfdc-config name="Salesforce_Config" doc:name="Salesforce Config" doc:id="b8b4080f-085a-4880-bcef-87450770d06a" >
+	<salesforce:sfdc-config name="Salesforce_Configuration" doc:name="Salesforce Config" doc:id="b8b4080f-085a-4880-bcef-87450770d06a" >
 		<salesforce:basic-connection username="chinna.mulesoft@gmail.com" password="Chinna@2790" securityToken="yrAyIx2Q2hrGzLGOePAwJQlf" />
 	</salesforce:sfdc-config>
 	<flow name="salesforce-demoFlow1" doc:id="8369c502-e1d2-4789-8987-784ec6eb9480" >
