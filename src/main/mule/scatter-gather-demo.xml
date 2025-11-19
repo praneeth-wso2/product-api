@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:wsc="http://www.mulesoft.org/schema/mule/wsc" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns:db="http://www.mulesoft.org/schema/mule/db"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/wsc http://www.mulesoft.org/schema/mule/wsc/current/mule-wsc.xsd">
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="61a7e37c-825b-4f3f-af9b-9a046fcedeca" >
+		<http:listener-connection host="0.0.0.0" port="8081" />
+	</http:listener-config>
+	<db:config name="Database_Config" doc:name="Database Config" doc:id="28c75059-54c5-4648-afb5-077e37450309" >
+		<db:my-sql-connection host="localhost" port="3306" user="root" password="Tiger@1234" />
+	</db:config>
+	<flow name="scatter-gather-demoFlow" doc:id="b644e7ef-1888-4af9-8f48-db07c6acaeda" >
+		<http:listener doc:name="Listener" doc:id="b0ae7ccd-ebcb-420b-bd04-b42f9eb6fdf7" config-ref="HTTP_Listener_config" path="/process-model"/>
+		<logger level="INFO" doc:name="Start Log" doc:id="a58e3581-1333-4784-ab4a-2f424b34a9af" message="Started flow" />
+		<scatter-gather doc:name="Scatter-Gather" doc:id="8baa5f0e-eb61-4974-9079-d44492e62f64" >
+			<route >
+				<db:select doc:name="Select EMP_Master" doc:id="d0e6cca0-411e-4f86-acc3-89385d0d272f" config-ref="Database_Config">
+			<db:sql><![CDATA[select emp_id, emp_name, emp_status from onboard.emp_master]]></db:sql>
+		</db:select>
+			</route>
+			<route >
+				<http:request method="GET" doc:name="Request EMP Finance API" doc:id="5b7f7905-d3ce-4d1a-9c8a-9b531475b096" url="https://emp-finance-api-9dg8k8.5sc6y6-4.usa-e2.cloudhub.io/employees" />
+			</route>
+		</scatter-gather>
+		<ee:transform doc:name="Set Response" doc:id="807340ba-4269-4324-b205-ee5bfa4aef71" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+(payload."1".payload map(financePayload, indexOfFinancePayload) -> {
+	(payload."0".payload filter($.emp_id == financePayload.id) map {
+		"id": $.'emp_id',
+		"name": $.'emp_name',
+		"status": $.'emp_status',
+		"salary": financePayload.'employee_salary',
+		"age": financePayload.'employee_age'
+	})
+}) filter($ != {})
+]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<logger level="INFO" doc:name="End Log" doc:id="17fa8c12-287b-4b7b-acd9-26aa227d1cd4" message="Completed flow" />
+	</flow>
+</mule>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd">
+	<flow name="simple-use-caseFlow" doc:id="54db84c5-3c8c-496a-9b03-5becd154c0eb" >
+		<http:listener doc:name="Listener" doc:id="67d797f4-805e-46fe-8588-f73c1bc48e0c" config-ref="HTTP_Listener_config" path="/simple-scatter-gather"/>
+		<logger level="INFO" doc:name="Logger" doc:id="84fea2e9-3d6e-42be-aca2-67da165898b6" message="Started flow"/>
+		<scatter-gather doc:name="Scatter-Gather" doc:id="45a3857d-9041-4326-aaa6-d5ff3e514f69" >
+			<route >
+				<set-variable value="40" doc:name="Set Variable" doc:id="d5a718dd-86bc-45f2-9e36-05e2b0d348a8" variableName="a"/>
+				<set-payload value='#["Apple"]' doc:name="Set Payload" doc:id="c377ddd4-0063-43d9-8a1c-9fc3eb07eaff" />
+			</route>
+			<route >
+				<set-payload value='#["Banana"]' doc:name="Set Payload" doc:id="fecdf224-26f2-4917-85f2-8b160c1408e9" />
+			</route>
+		</scatter-gather>
+		<logger level="INFO" doc:name="Logger" doc:id="8cab9ed0-ef50-4b9a-99e9-d3bdde27cdb1" message="#[payload]"/>
+	</flow>
+</mule>
